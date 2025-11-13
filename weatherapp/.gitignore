@@ -1,0 +1,5 @@
+db.sqlite3
+/main/.env
+/main/__pycache__/
+/main/migrations/__pycache__
+/weatherapp/__pycache__/

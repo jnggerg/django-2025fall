@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% extends "base.html"%}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+  </head>
+  <body>
+    {%block content%} {% if errors %}
+    <div>
+      <h2>Something went wrong:</h2>
+      <ul>
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %} {% if data %}
+    <h2>Current weather in {{ data.name }}, {{ data.sys.country}}:</h2>
+    <p>Temperature (Celsius): {{ data.main.temp }}°C</p>
+    <p>Weather status: {{ data.weather.0.description }}</p>
+    <p>Humidity: {{ data.main.humidity }}%</p>
+    <p>Wind: {{ data.wind.speed }} km/h</p>
+    {% endif %} {% endblock %}
+  </body>
+</html>
