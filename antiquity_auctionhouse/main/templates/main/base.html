@@ -1,0 +1,75 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Régiségek Online Aukciós Háza
+    </title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+          <strong>Régiségek Online Aukciós Háza</strong>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a
+                class="nav-link {% block nav_home %}{% endblock %}"
+                href="{% url 'home' %}"
+                >Főoldal</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% block nav_auctions %}{% endblock %}"
+                href="/items/"
+                >Aukciós tárgyak</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% block nav_experts %}{% endblock %}" href="/workers/"
+                >Csapatunk</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% block nav_login %}{% endblock %}" href="#"
+                >Bejelentkezés</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %} {% endblock %}
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container text-center">
+        <p class="mb-0">
+          &copy; 2025 Régiségek Online Aukciós Háza.
+        </p>
+        <p class="small">
+          A múlt megőrzése a jövő generációi számára.
+        </p>
+      </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

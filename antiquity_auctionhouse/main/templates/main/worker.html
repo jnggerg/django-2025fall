@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% block nav_experts %} active {% endblock %} 
+{% block content %}
+
+<div class="container my-5">
+
+        <div class="card mb-3">
+            <div class="row g-0">
+                {% if worker.picture %}
+                <div class="col-md-4">
+                    <img src="{{ worker.picture }}" class="img-fluid" alt="{{ worker.name }}">
+                </div>
+                {% endif %}
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ worker.name }}</h5>
+                        <p class="badge bg-primary">{{ worker.get_roles_display }}</p>
+                        {% if worker.contacts.email %}
+                        <p>Email: {{ worker.contacts.email }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

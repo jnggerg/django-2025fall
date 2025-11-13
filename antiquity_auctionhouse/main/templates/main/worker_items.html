@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% block nav_home %} active {% endblock %} 
+{% block content %}
+<div class="container my-5">
+    <h1> {{ worker.name }} Aukciós Tárgyai</h1>
+    <p> Fedezze fel {{ worker.name }} által kezelt aukciós tárgyainkat.</p>
+    
+    {% for item in items %}
+        <div class="card mb-3">
+            <div class="row g-0">
+                {% if item.picture %}
+                <div class="col-md-4">
+                    <img src="{{ item.picture }}" class="img-fluid" alt="{{ item.name }}">
+                </div>
+                {% endif %}
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">Típus: {{ item.get_type_display }}</p>
+                        <p class="card-text">Kezdő licit: {{ item.starting_bid }} Ft</p>
+                        <p class="card-text">Aukció vége: {{ item.auction_end_time }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
