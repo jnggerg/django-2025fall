@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from .models import AuctionItem, Worker
+from django.views import View
+from .models import AuctionItem, Review, Worker
+from .forms import ReviewForm
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -11,14 +14,14 @@ def workersList(request):
     context = {
         'workers': workers
     }
-    return render(request, 'main/workers_list.html', context)
+    return render(request, 'workers/workers_list.html', context)
 
 def workerDetail(request, worker_id):
     worker = Worker.objects.get(id=worker_id)
     context = {
         'worker': worker,
     }
-    return render(request, 'main/worker.html', context)
+    return render(request, 'workers/worker.html', context)
 
 #seperate page for all items of a worker
 def workerItems(request, worker_id):
@@ -28,18 +31,38 @@ def workerItems(request, worker_id):
         'worker': worker,
         'items': items
     }
-    return render(request, 'main/worker_items.html', context)
+    return render(request, 'workers/worker_items.html', context)
 
 def auctionItemsList(request):
     items = AuctionItem.objects.all()
     context = {
         'items': items
     }
-    return render(request, 'main/auction_items_list.html', context)
+    return render(request, 'auction_items/auction_items_list.html', context)
 
 def auctionItemDetail(request, item_id):
     item = AuctionItem.objects.get(id=item_id)
     context = {
         'item': item
     }
-    return render(request, 'main/auction_item.html', context)
+    return render(request, 'auction_items/auction_item.html', context)
+
+def reviewsList(request):
+    reviews = Review.objects.all()
+    context = {
+        'reviews': reviews
+    }
+    return render(request, 'reviews/reviews.html', context)
+
+
+class FormView(View):
+    def get(self, request):
+        form = ReviewForm()
+        return render (request, 'reviews/submit_review.html', {'form': form})
+
+    def post(self, request):
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('reviewsList')
+        return render(request, 'main/submit_review.html', {'form': form})

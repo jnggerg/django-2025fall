@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-1 text-muted">404</h1>
+            <h2 class="mb-4">Oldal nem található</h2>
+            <p class="lead text-muted mb-4">
+                Sajnáljuk, de a keresett oldal nem létezik vagy el lett távolítva.
+            </p>
+            <div class="d-flex gap-3 justify-content-center">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-house"></i> Vissza a főoldalra
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

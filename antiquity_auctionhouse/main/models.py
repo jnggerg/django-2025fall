@@ -55,10 +55,6 @@ class Review(models.Model):
     comment = models.TextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
 
-    def clean(self):
-        if not (1 <= self.rating <= 5):
-            raise ValidationError('Rating must be between 1 and 5.')
-
     def __str__(self):
         return f'Review for {self.worker.name} - Rating: {self.rating}'
     

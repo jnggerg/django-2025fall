@@ -1,6 +1,6 @@
 {% load django_bootstrap5 %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,8 +11,7 @@
     {% bootstrap_javascript %}
     {% block extra_css %}{% endblock %}
   </head>
-  <body>
-
+  <body class="d-flex flex-column h-100">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">
@@ -30,36 +29,47 @@
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
               <a
-                class="nav-link {% block nav_home %}{% endblock %}"
-                href="{% url 'home' %}"
+                class="nav-link"
+                href="/"
                 >Főoldal</a
               >
             </li>
             <li class="nav-item">
               <a
-                class="nav-link {% block nav_auctions %}{% endblock %}"
+                class="nav-link"
                 href="/items/"
                 >Aukciós tárgyak</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link {% block nav_experts %}{% endblock %}" href="/workers/"
+              <a class="nav-link" href="/workers/"
                 >Csapatunk</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link {% block nav_login %}{% endblock %}" href="#"
+              <a class="nav-link" href="/reviews/"
+                >Vélemények</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login/"
                 >Bejelentkezés</a
               >
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register/"
+                >Regisztráció</a
+              >
           </ul>
         </div>
       </div>
     </nav>
 
-    {% block content %} {% endblock %}
+    <main class="flex-grow-1">
+      {% block content %} {% endblock %}
+    </main>
 
-    <footer class="bg-dark text-white py-4 mt-5">
+    <footer class="bg-dark text-white py-4 mt-auto">
       <div class="container text-center">
         <p class="mb-0">
           &copy; 2025 Régiségek Online Aukciós Háza.

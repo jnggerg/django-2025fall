@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 ">
+            <div class="card shadow card-body">
+                <h2 class="card-title mb-4">Vélemény beküldése</h2>
+                
+                {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Hiba!</strong> Kérjük javítsa ki az alábbi hibákat:
+                    <ul class="mb-0">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Vélemény beküldése</button>
+                        <a href="/reviews" class="btn btn-secondary">Mégse</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

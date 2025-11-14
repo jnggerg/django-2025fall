@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+{% block nav_home %} active {% endblock %} 
+{% block content %}
+<div class="container my-5">
+    <div class="mb-4 text-center border-bottom pb-3">
+    <h1> Csapatunk</h1>
+    <p> Ismerje meg szakértői csapatunkat, akik elkötelezetten dolgoznak azon, hogy a legjobb aukciós élményt nyújtsák Önnek. Tapasztalt régiségértékelőink és ügyfélszolgálati munkatársaink készen állnak arra, hogy segítsenek Önnek minden lépésnél.</p>
+    </div>
+    {% if workers|length == 0 %}
+        <p>Nincsenek elérhető munkatársak.</p>
+    {% endif %}
+    
+    {% for worker in workers %}
+        <div class="card mb-3">
+            <div class="row g-0">
+                {% if worker.picture %}
+                <div class="col-md-4">
+                    <img src="{{ worker.picture }}" class="img-fluid" alt="{{ worker.name }}">
+                </div>
+                {% endif %}
+                <div class="col-md-8">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ worker.name }}</h5>
+                    <a href="{% url 'workersItems' worker.id %}" class="btn btn-primary">Árverezésre bocsájtott régiségek</a>
+                    <a href="{% url 'workerDetail' worker.id %}" class="btn btn-primary">Kapcsolat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
