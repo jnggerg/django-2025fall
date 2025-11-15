@@ -3,6 +3,8 @@ from django.views import View
 from .models import AuctionItem, Review, Worker
 from .forms import ReviewForm
 from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 
 # Create your views here.
 
@@ -66,3 +68,35 @@ class FormView(View):
             form.save()
             return redirect('reviewsList')
         return render(request, 'main/submit_review.html', {'form': form})
+
+class RegisterView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, 'main/register.html', {'form': form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Auto login after registration
+            return redirect("home")
+
+class LoginView(View):
+    def get(self, request):
+        form = AuthenticationForm()
+        return render(request, 'main/login.html', {'form': form})
+
+    def post(self, request):
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+        return render(request, 'main/login.html', {'form': form})
+
+def logoutView(request):
+    logout(request)
+    return redirect('home')

@@ -10,4 +10,7 @@ urlpatterns = [
     path('items/<int:item_id>/', views.auctionItemDetail, name='auctionItemDetail'),
     path('reviews/', views.reviewsList, name='reviewsList'),
     path('submit_review/', views.FormView.as_view(), name='submit_review'),
+    path('register/', views.RegisterView.as_view(), name='register'),
+    path('login/', views.LoginView.as_view(), name='login'),
+    path('logout/', views.logoutView, name='logout'),
 ]

@@ -17,14 +17,6 @@
         <a class="navbar-brand" href="{% url 'home' %}">
           <strong>Régiségek Online Aukciós Háza</strong>
         </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
@@ -51,6 +43,19 @@
                 >Vélemények</a
               >
             </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profil</a></li>
+                <li><a class="dropdown-item" href="#">Beállítások</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Kijelentkezés</a></li>
+              </ul>
+            </li>
+            {% else %}
             <li class="nav-item">
               <a class="nav-link" href="/login/"
                 >Bejelentkezés</a
@@ -60,6 +65,8 @@
               <a class="nav-link" href="/register/"
                 >Regisztráció</a
               >
+            </li>
+            {% endif %}
           </ul>
         </div>
       </div>
