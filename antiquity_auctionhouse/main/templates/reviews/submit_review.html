@@ -9,7 +9,7 @@
                 <h2 class="card-title mb-4">Vélemény beküldése</h2>
                 
                 {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger">
                     <strong>Hiba!</strong> Kérjük javítsa ki az alábbi hibákat:
                     <ul class="mb-0">
                         {% for field, errors in form.errors.items %}

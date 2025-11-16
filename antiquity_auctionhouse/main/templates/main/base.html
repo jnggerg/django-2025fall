@@ -1,4 +1,6 @@
 {% load django_bootstrap5 %}
+{% load tags %}
+{% load filters %}
 <!DOCTYPE html>
 <html lang="en" class="h-100">
   <head>
@@ -19,6 +21,9 @@
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
+            {% if user.is_staff %}
+            <li class="nav-item"> <a class="nav-link" href="/admin/"> ADMIN</a> </li>
+            {% endif %}
             <li class="nav-item">
               <a
                 class="nav-link"
@@ -44,13 +49,12 @@
               >
             </li>
             {% if user.is_authenticated %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item dropdown border rounded mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-bs-toggle="dropdown">
                 {{ user.username }}
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Profil</a></li>
-                <li><a class="dropdown-item" href="#">Beállítások</a></li>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/my-bids/">Licitjeim</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'logout' %}">Kijelentkezés</a></li>
               </ul>

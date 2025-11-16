@@ -4,15 +4,36 @@ from django.utils import timezone
 from faker import Faker
 import random
 from .imageseed import get_themed_images
+from django.contrib.auth.models import Group, User
 
-# using Faker to seed random data into database models
+# using Faker to seed random data into database models for testing
 # for image urls, i am using pexels API with items types as themes, the API call is in imageseed.p
-
 
 class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         fake = Faker("hu_HU")
+
+        Group.objects.all().delete()
+        User.objects.all().delete()
+        
+        # create adminuser
+        superuser = User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='admin'
+        )
+        self.stdout.write(f'Created superuser: {superuser.username} (password: admin123)')
+        
+        # auctioneer user to handle starting / ending autcitons
+        auctioneer_group, _ = Group.objects.get_or_create(name='Auctioneers')
+        
+        user = User.objects.create_user(
+            username='auctioneer1',
+            password='password123!'  # create_user hashes by default
+        )
+        user.groups.add(auctioneer_group) 
+        self.stdout.write(f'Created user: {user.username}')
 
         # "drop" tables
         AuctionItem.objects.all().delete()
@@ -25,8 +46,8 @@ class Command(BaseCommand):
             worker = Worker.objects.create(
                 name=fake.name(),
                 picture=worker_images[i],
-                roles = random.choice([Worker.Roles.NORMAL, Worker.Roles.AUCTIONEER]),
-                contacts={"email": fake.email(), "phone": fake.msisdn(), "facebook": "https://facebook.com", "linkedin": "https://linkedin.com"}
+                introduction=fake.paragraph(),
+                contacts={"email": fake.email(), "phone": fake.phone_number(), "facebook": "https://facebook.com", "linkedin": "https://linkedin.com"}
             )
             workers.append(worker)
             self.stdout.write(f'Created worker: {worker.name}')
@@ -57,7 +78,7 @@ class Command(BaseCommand):
                     auction_end_time=fake.future_datetime(end_date='+30d', tzinfo=timezone.get_current_timezone()),
                     worker=worker,
                     picture=images[item_type][chosen_types[item_type]]
-                )
+                ) # is_active false by default, only "auctioneer" users (staff) will be able to open bidding 
                 chosen_types[item_type] += 1
             
             # 2 reviews for every worker

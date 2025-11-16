@@ -1,8 +1,24 @@
 {% extends 'main/base.html' %}
+{% load tags %}
+{% load filters %}
 {% block nav_home %} active {% endblock %} 
 {% block content %}
+
 <div class="container my-5">
+    <h1 class="text-center">Aukciós Tárgyak</h1>
+    <hr class="mb-4">
+    {% if items|length == 0 %}
+        <p>Nincsenek elérhető aukciós tárgyak.</p>
+    {% endif %}
     
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
     {% for item in items %}
         <div class="card mb-3">
             <div class="row g-0">
@@ -12,16 +28,82 @@
                 </div>
                 {% endif %}
                 <div class="col-md-8">
-                    <div class="card-body">
+                  <div class="row g-0">
+                    <div class="card-body col-md-6">
                         <h5 class="card-title">{{ item.name }}</h5>
+                        {% if item.is_active %}
+                        <span class="badge bg-success">Aktív</span>
                         <p class="card-text">Típus: {{ item.get_type_display }}</p>
-                        <p class="card-text">Kezdő licit: {{ item.starting_bid }} Ft</p>
+                          {% if item.get_current_price == item.starting_bid %}
+                          <p class="card-text">Kezdő licit: {{ item.starting_bid }} Ft</p>
+                          {% else %}
+                          <p class="card-text">Legmagasabb licit: {{ item.get_current_price }} Ft</p>
+                          {% endif %}
                         <p class="card-text">Aukció vége: {{ item.auction_end_time }}</p>
-                        <a href="{% url 'auctionItemDetail' item.id %}" class="btn btn-primary">Részletek</a>
+                        {% else %}
+                          {% if item.sold %}
+                          <span class="badge bg-danger">Eladva</span> 
+                          {% else %}
+                          <span class="badge bg-secondary">Lezárt</span> 
+                          {% endif %}
+                        <p class="card-text">Típus: {{ item.get_type_display }}</p>
+                          {% if item.get_current_price == item.starting_bid %}
+                          <p class="card-text">Kezdő licit: {{ item.starting_bid }} Ft</p>
+                          {% else %}
+                          <p class="card-text"><strong>Nyertes: <i> {{ item.get_highest_bidder.username }} </i>| Nyertes Licit: {{ item.get_current_price }} Ft</strong></p>
+                          {% endif %}
+                        <p class="card-text">Aukció vége: {{ item.auction_end_time }}</p>
+                        {% endif %}
+                        
                     </div>
+                    <div class="col-md-6">
+                        {% if item.is_active %}
+                          {% if user.is_authenticated and not user|has_group:"Auctioneers" %}
+                          <div class="d-flex flex-column justify-content-center h-100 p-3">
+                              <form method="post" action="{% url 'placeBid' item.id %}">
+                                  {% csrf_token %}
+                                  <div class="mb-3">
+                                      <label for="bidAmount{{ item.id }}" class="form-label">Licit összege (Ft):</label>
+                                      <input type="number" class="form-control" id="bidAmount{{ item.id }}" name="bid_amount" min="{{ item.get_minimum_next_bid }}" required>
+                                  </div>
+                                  <button type="submit" class="btn btn-primary">Licitálás</button>
+                              </form>
+                          </div>
+                          {% endif %}
+                          {% if user|has_group:"Auctioneers" %}
+                          <div class="d-flex flex-column justify-content-center h-100 p-3">
+                            <a href="{% url 'closeBidding' item.id %}" class="btn btn-danger">Licitálás lezárása</a>
+                          </div>
+                          {% endif %}
+                          {% if not user.is_authenticated %}
+                          <div class="d-flex flex-column justify-content-center h-100 p-3">
+                              <p> Kérjük, <a href="/login/">jelentkezzen be</a> a licitáláshoz.</p>
+                          </div>
+                          {% endif %}
+                        {% else %}
+                          {% if user|has_group:"Auctioneers" and not item.sold %}
+                            <div class="d-flex flex-column justify-content-center h-100 p-3">
+                              <a href="{% url 'openBidding' item.id %}" class="btn btn-warning mb-2">Licitálás megnyitása</a>
+                            </div>
+                          {% endif %}
+                          {% if user.is_authenticated and not user|has_group:"Auctioneers" %}
+                          <div class="d-flex flex-column justify-content-center h-100 p-3">
+                              <p> A licitálás jelenleg le van zárva.</p>
+                          </div>
+                          {% endif %}
+                          {% if not user.is_authenticated %}
+                          <div class="d-flex flex-column justify-content-center h-100 p-3">
+                              <p> Kérjük, <a href="/login/">jelentkezzen be</a> a licitáláshoz.</p>
+                          </div>
+                          {% endif %}
+                        {% endif %}
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
     {% endfor %}
+
+    {% pagination items "tárgy" %}
 </div>
 {% endblock %}

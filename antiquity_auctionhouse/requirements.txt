@@ -1,6 +1,5 @@
 django
 django-bootstrap5
-pillow
 Faker
 httpx
 dotenv

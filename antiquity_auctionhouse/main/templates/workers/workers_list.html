@@ -1,6 +1,9 @@
 {% extends 'main/base.html' %}
 {% block nav_home %} active {% endblock %} 
 {% block content %}
+{% load filters %}
+{% load tags %}
+{% star_svg %}
 <div class="container my-5">
     <div class="mb-4 text-center border-bottom pb-3">
     <h1> Csapatunk</h1>
@@ -21,6 +24,10 @@
                 <div class="col-md-8">
                     <div class="card-body">
                     <h5 class="card-title">{{ worker.name }}</h5>
+                    <p class="card-text"></p>
+                    <hr>
+                    <p class="card-text">{{ worker.introduction }}</p>
+                    <p class="card-text">Átlagos értékelés: {{ worker.reviews|avg_rating|safe }}</p>
                     <a href="{% url 'workersItems' worker.id %}" class="btn btn-primary">Árverezésre bocsájtott régiségek</a>
                     <a href="{% url 'workerDetail' worker.id %}" class="btn btn-primary">Kapcsolat</a>
                     </div>

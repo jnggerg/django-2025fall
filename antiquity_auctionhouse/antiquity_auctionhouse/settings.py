@@ -127,5 +127,16 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'  
+LOGIN_REDIRECT_URL = 'home'  
+LOGOUT_REDIRECT_URL = 'home'  
+
+# need to map django messages to proper bootstrap classes (if not done, error has no style for example)
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}  
