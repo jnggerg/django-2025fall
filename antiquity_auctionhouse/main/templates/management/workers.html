@@ -1,0 +1,56 @@
+{% extends 'main/base.html' %}
+{% block nav_home %} active {% endblock %} 
+{% block content %}
+{% load filters %}
+{% load tags %}
+{% star_svg %}
+<div class="container my-5">
+    <div class="mb-4 text-center border-bottom pb-3">
+    <h1> Csapatunk</h1>
+    <p> Ismerje meg szakértői csapatunkat, akik elkötelezetten dolgoznak azon, hogy a legjobb aukciós élményt nyújtsák Önnek. Tapasztalt régiségértékelőink és ügyfélszolgálati munkatársaink készen állnak arra, hogy segítsenek Önnek minden lépésnél.</p>
+    </div>
+    {% if workers|length == 0 %}
+        <p>Nincsenek elérhető munkatársak.</p>
+    {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    {% for worker in workers %}
+        <div class="card mb-3">
+            <div class="row g-0">
+                {% if worker.picture %}
+                <div class="col-md-4">
+                    <img src="{{ worker.picture }}" class="img-fluid" alt="{{ worker.name }}">
+                </div>
+                {% endif %}
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text"><strong>Szerkesztés</strong></p>
+                        <form method="post" action="/management/workers/{{ worker.id }}/">
+                            {% csrf_token %}
+                            <input type="hidden" name="_method" value="PUT">
+                            <div class="mb-3">
+                                <strong>Név:</strong><input type="text" class="form-control" name="name" value="{{ worker.name }}" placeholder="Név">
+                                <strong>Bemutatkozás:</strong><input type="text" class="form-control" name="introduction" value="{{ worker.introduction }}" placeholder="Bemutatkozás">
+                                <strong>Kép URL:</strong><input type="url" class="form-control" name="picture" value="{{ worker.picture }}" placeholder="Kép URL">
+                                <strong>Elérhetőségek:</strong><input type="text" class="form-control" name="contacts" value="{{ worker.contacts.values|join:', ' }}" placeholder="contacts (vesszővel elválasztva)">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Frissítés</button>
+                        </form>
+                        <form method="post" action="/management/workers/{{ worker.id }}/delete/" class="mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Törlés</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

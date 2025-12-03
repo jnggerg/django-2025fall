@@ -10,7 +10,6 @@ from django.contrib.auth.models import Group, User
 # for image urls, i am using pexels API with items types as themes, the API call is in imageseed.p
 
 class Command(BaseCommand):
-
     def handle(self, *args, **kwargs):
         fake = Faker("hu_HU")
 
@@ -19,21 +18,22 @@ class Command(BaseCommand):
         
         # create adminuser
         superuser = User.objects.create_superuser(
-            username='admin',
+            username='AdminMaster',
             email='admin@example.com',
-            password='admin'
+            password='DjangoUser'
         )
-        self.stdout.write(f'Created superuser: {superuser.username} (password: admin123)')
+        self.stdout.write(f'Created superuser: {superuser.username} (password: DjangoUser)')
         
         # auctioneer user to handle starting / ending autcitons
-        auctioneer_group, _ = Group.objects.get_or_create(name='Auctioneers')
+        management_group, _ = Group.objects.get_or_create(name='Management')
         
         user = User.objects.create_user(
-            username='auctioneer1',
-            password='password123!'  # create_user hashes by default
+            username='jani',
+            password='ASDFjkle'  # create_user hashes by default
         )
-        user.groups.add(auctioneer_group) 
-        self.stdout.write(f'Created user: {user.username}')
+        user.groups.add(management_group)
+        superuser.groups.add(management_group)
+        self.stdout.write(f'Created user: {user.username} (password: ASDFjkle) with Management group')
 
         # "drop" tables
         AuctionItem.objects.all().delete()

@@ -30,6 +30,23 @@
                 <div class="col-md-8">
                   <div class="row g-0">
                     <div class="card-body col-md-6">
+                        {% if user|has_group:"Management" %}
+                        <form method="post" action="{% url 'ManagementAuctionItemUpdate' item.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="_method" value="PUT">
+                            <div class="mb-3">
+                                <strong>Név:</strong><input type="text" class="form-control" name="name" value="{{ item.name }}" placeholder="Név">
+                                <strong>Kép URL:</strong><input type="url" class="form-control" name="picture" value="{{ item.picture }}" placeholder="Kép URL">
+                                <strong>Kezdő licit:</strong><input type="number" class="form-control" name="starting_bid" value="{{ item.starting_bid }}" placeholder="Kezdő licit">
+                                <strong>Aukció vége:</strong><input type="datetime-local" class="form-control" name="auction_end_time" value="{{ item.auction_end_time|date:'Y-m-d\\TH:i' }}" placeholder="Aukció vége">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Frissítés</button>
+                        </form>
+                        <form method="post" action="{% url 'ManagementAuctionItemDelete' item.id %}" class="mt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Törlés</button>
+                        </form>
+                        {% else %}
                         <h5 class="card-title">{{ item.name }}</h5>
                         {% if item.is_active %}
                         <span class="badge bg-success">Aktív</span>
@@ -54,11 +71,11 @@
                           {% endif %}
                         <p class="card-text">Aukció vége: {{ item.auction_end_time }}</p>
                         {% endif %}
-                        
+                        {% endif %}
                     </div>
                     <div class="col-md-6">
                         {% if item.is_active %}
-                          {% if user.is_authenticated and not user|has_group:"Auctioneers" %}
+                          {% if user.is_authenticated and not user|has_group:"Management" %}
                           <div class="d-flex flex-column justify-content-center h-100 p-3">
                               <form method="post" action="{% url 'placeBid' item.id %}">
                                   {% csrf_token %}
@@ -70,7 +87,7 @@
                               </form>
                           </div>
                           {% endif %}
-                          {% if user|has_group:"Auctioneers" %}
+                          {% if user|has_group:"Management" %}
                           <div class="d-flex flex-column justify-content-center h-100 p-3">
                             <a href="{% url 'closeBidding' item.id %}" class="btn btn-danger">Licitálás lezárása</a>
                           </div>
@@ -81,12 +98,12 @@
                           </div>
                           {% endif %}
                         {% else %}
-                          {% if user|has_group:"Auctioneers" and not item.sold %}
+                          {% if user|has_group:"Management" and not item.sold %}
                             <div class="d-flex flex-column justify-content-center h-100 p-3">
                               <a href="{% url 'openBidding' item.id %}" class="btn btn-warning mb-2">Licitálás megnyitása</a>
                             </div>
                           {% endif %}
-                          {% if user.is_authenticated and not user|has_group:"Auctioneers" %}
+                          {% if user.is_authenticated and not user|has_group:"Management" %}
                           <div class="d-flex flex-column justify-content-center h-100 p-3">
                               <p> A licitálás jelenleg le van zárva.</p>
                           </div>
